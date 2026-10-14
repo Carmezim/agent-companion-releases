@@ -1,4 +1,4 @@
-# Agent companion for Apple Silicon
+# Agent companion 
 
 Keep local Codex and Claude sessions visible in a terminal panel. The companion
 is compiled Zig code; it makes no model requests and never switches providers.
