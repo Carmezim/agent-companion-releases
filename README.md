@@ -68,11 +68,17 @@ does not answer a question or grant permission.
 
 ## Controls
 
-Use `j/k` or arrows to select, Enter to open, `d` for details, `/` to search, and
-`?` for all controls. `h/l` or Tab changes list/detail focus; `{` and `}` follow
+Use `j/k` or arrows to select, Enter to open, `h/l` for list/details, `/` to search, and
+`?` for all controls. Tab changes list/detail focus; `{` and `}` follow
 that focus. `v` freezes mouse selection; Cmd+C copies in Ghostty. `V`, `j/k`, and
-`y` select and copy detail lines. `F` toggles floating for the containing Ghostty
-window. `q` closes the panel and leaves agents running.
+`y` select and copy detail lines. `:d` detaches a workspace viewer; `:close`,
+then `:close!`, confirms closing its selected agent terminal. Detached jobs may
+continue. Cmd+Option+Left/Right
+focuses the panel/agent split. Workspace windows start with floating off.
+`F` toggles floating for the containing Ghostty
+window. `:q` closes the panel and leaves agents running.
+Esc, then `:`, opens a visible command line. Enter runs it; Esc cancels it.
+Plain `q` never closes the panel.
 
 ## Files and updates
 
