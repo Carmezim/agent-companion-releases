@@ -6,10 +6,15 @@ if [[ -n "${AGENT_COMPANION_HOME:-}" ]]; then
   printf 'Unset AGENT_COMPANION_HOME before installing the active release.\n' >&2
   exit 1
 fi
-if [[ $# -gt 1 || ( $# -eq 1 && "$1" != --from-directory=* ) ]]; then
-  printf 'Usage: bash install.sh [--from-directory=/ABSOLUTE/RELEASE_DIRECTORY]\n' >&2
-  exit 2
-fi
+directory=
+runtime_only=0
+for argument in "$@"; do
+  case "$argument" in
+    --runtime-only) [[ $runtime_only -eq 0 ]] || exit 2; runtime_only=1 ;;
+    --from-directory=*) [[ -z "$directory" ]] || exit 2; directory="${argument#*=}" ;;
+    *) printf 'Usage: bash install.sh [--from-directory=/ABSOLUTE/RELEASE_DIRECTORY] [--runtime-only]\n' >&2; exit 2 ;;
+  esac
+done
 if [[ "$(/usr/bin/uname -s)" != Darwin || "$(/usr/bin/uname -m)" != arm64 ]]; then
   printf 'This release requires Apple Silicon macOS 13 or later.\n' >&2
   exit 1
@@ -38,6 +43,7 @@ if [[ -e "$current" && ! -L "$current" ]]; then
 fi
 launcher_fingerprint() {
   local path="$1"
+  if [[ $runtime_only -eq 1 ]]; then printf 'preserved\n'; return; fi
   if [[ -e "$path" || -L "$path" ]]; then
     if [[ ! -f "$path" || -L "$path" || ! -O "$path" ]] || ! /usr/bin/grep -q '^# Agent companion binary launcher$' "$path"; then
       printf 'Preserving existing command: %s. Move it before installing.\n' "$path" >&2; exit 1
@@ -60,11 +66,11 @@ cleanup() {
       ln -s "$previous" "$stage/restore"
       /bin/mv -fh "$stage/restore" "$current"
     else rm -f -- "$current"; fi
-    for command in agents terminal-workspace; do
+    if [[ $runtime_only -eq 0 ]]; then for command in agents terminal-workspace; do
       if [[ -f "$stage/old-$command" ]]; then
         /bin/mv -f "$stage/old-$command" "$bin_root/$command"
       else rm -f -- "$bin_root/$command"; fi
-    done
+    done; fi
   fi
   rm -rf -- "$stage"
   rmdir -- "$install_lock"
@@ -72,14 +78,13 @@ cleanup() {
 }
 trap cleanup EXIT
 archive=agent-companion-macos-arm64.tar.gz
-if [[ $# -eq 1 ]]; then
-  directory="${1#--from-directory=}"
+if [[ -n "$directory" ]]; then
   [[ "$directory" == /* ]] || { printf 'Release directory must be absolute.\n' >&2; exit 2; }
   cp "$directory/$archive" "$directory/SHA256SUMS" "$stage/"
 else
   url=https://github.com/Carmezim/agent-companion-releases/releases/latest/download
   for asset in "$archive" SHA256SUMS; do
-    /usr/bin/curl --fail --location --proto '=https' --tlsv1.2 --max-filesize 67108864 \
+    /usr/bin/curl --fail --location --proto '=https' --tlsv1.2 --connect-timeout 15 --max-time 180 --max-filesize 67108864 \
       "$url/$asset" --output "$stage/$asset"
   done
 fi
@@ -133,7 +138,7 @@ else /bin/mv "$stage/runtime" "$release"; fi
 [[ "$(launcher_fingerprint "$bin_root/agents")" == "$agents_before" && \
    "$(launcher_fingerprint "$bin_root/terminal-workspace")" == "$workspace_before" && \
    "$(readlink "$current" || true)" == "$previous" && ( ! -e "$current" || -L "$current" ) ]] || { printf 'Installation state changed; activation cancelled.\n' >&2; exit 1; }
-for command in agents terminal-workspace; do
+if [[ $runtime_only -eq 0 ]]; then for command in agents terminal-workspace; do
   [[ ! -f "$bin_root/$command" ]] || cp -p "$bin_root/$command" "$stage/old-$command"
   cat > "$stage/$command" <<'LAUNCHER'
 #!/bin/bash
@@ -145,14 +150,24 @@ exec "$root/scripts/COMMAND_NAME" "$@"
 LAUNCHER
   /usr/bin/sed -i '' "s/COMMAND_NAME/$command/" "$stage/$command"
   chmod 700 "$stage/$command"
-done
+done; fi
 [[ "$(launcher_fingerprint "$bin_root/agents")" == "$agents_before" && \
    "$(launcher_fingerprint "$bin_root/terminal-workspace")" == "$workspace_before" && \
    "$(readlink "$current" || true)" == "$previous" ]] || { printf 'Installation state changed; activation cancelled.\n' >&2; exit 1; }
 ln -s "$release" "$stage/current"
 /bin/mv -fh "$stage/current" "$current"
 activated=1
-for command in agents terminal-workspace; do /bin/mv -f "$stage/$command" "$bin_root/$command"; done
-"$bin_root/terminal-workspace" --version
+if [[ $runtime_only -eq 0 ]]; then
+  for command in agents terminal-workspace; do /bin/mv -f "$stage/$command" "$bin_root/$command"; done
+fi
+if [[ $runtime_only -eq 1 ]]; then
+  AGENT_COMPANION_HOME="$release" "$release/scripts/terminal-workspace" --version
+else
+  "$bin_root/terminal-workspace" --version
+fi
 complete=1
-printf '\nInstalled. Add ~/.local/bin to PATH if needed.\nOpen: agents --panel\nWorkspace: brew install tmux; agents --workspace\nEnable native tracking: terminal-workspace setup-hooks --apply\n'
+if [[ $runtime_only -eq 1 ]]; then
+  printf '\nUpdated. Reopen your panel to use this version. Your agents keep running.\n'
+else
+  printf '\nInstalled. Add ~/.local/bin to PATH if needed.\nOpen: agents --panel\nWorkspace: brew install tmux; agents --workspace\nEnable native tracking: terminal-workspace setup-hooks --apply\n'
+fi

@@ -35,7 +35,8 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents --window` | Open the optional macOS app window. |
 | `agents -h` | Show command instructions. |
 
-Workspace mode requires tmux 3.6 or later, installed locally:
+Panel and floating modes do not require tmux. Workspace mode requires
+tmux 3.6 or later, installed locally:
 
 ```sh
 brew install tmux
@@ -71,7 +72,8 @@ does not answer a question or grant permission.
 Use `j/k` or arrows to select, Enter to open, `h/l` for list/details, `/` to search, and
 `?` for all controls. Tab changes list/detail focus; `{` and `}` follow
 that focus. `v` freezes mouse selection; Cmd+C copies in Ghostty. `V`, `j/k`, and
-`y` select and copy detail lines. `:d` detaches a workspace viewer; `:close`,
+`y` select and copy detail lines. In panel/floating mode, `:d` removes a session
+from the list; `:attach` / `:a` restores it. In workspace, `:d` detaches a viewer; `:close`,
 then `:close!`, confirms closing its selected agent terminal. Detached jobs may
 continue. Cmd+Option+Left/Right
 focuses the panel/agent split. Workspace windows start with floating off.
@@ -88,8 +90,17 @@ Plain `q` never closes the panel.
 - Local session state: `~/.local/state/terminal-workspace/`.
 - Workspace socket: `workspace.sock` in that state directory.
 
-Run the installer again to update. It verifies before activation and preserves
-the previous version directory. No histories, credentials, private source or
+Run `agents --update` to install the latest public release. It verifies before
+activation, preserves launchers, local state and the previous version directory,
+and leaves running agents alone. Reopen your panel to use the new version.
+Versions before 0.3.2 can update by running the installer again.
+
+For a bug report, include what happened and the output of
+`agents --diagnostics > agent-companion-report.json`. The file includes at most
+128 recent action timings/error codes plus app version and platform. It excludes
+session content and paths; nothing is uploaded automatically.
+
+ No histories, credentials, private source or
 test fixtures are included in public downloads. This repository distributes
 binaries and user documentation; the implementation source is private.
 
