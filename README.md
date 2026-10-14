@@ -15,7 +15,6 @@ curl -fL https://github.com/Carmezim/agent-companion-releases/releases/latest/do
 bash /tmp/agent-companion-install.sh
 ```
 
-No compiler, Python, GitHub account or source repository access is required.
 The installer checks the archive checksum, runtime receipt and app signature.
 Builds use a local ad hoc signature; they are not Apple notarized releases.
 
