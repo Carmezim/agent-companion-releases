@@ -1,4 +1,4 @@
-# Agent companion 
+# Agent companion for Apple Silicon
 
 Keep local Codex and Claude sessions visible in a terminal panel. The companion
 is compiled Zig code; it makes no model requests and never switches providers.
@@ -15,6 +15,7 @@ curl -fL https://github.com/Carmezim/agent-companion-releases/releases/latest/do
 bash /tmp/agent-companion-install.sh
 ```
 
+No compiler, Python, GitHub account or source repository access is required.
 The installer checks the archive checksum, runtime receipt and app signature.
 Builds use a local ad hoc signature; they are not Apple notarized releases.
 
@@ -33,6 +34,7 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents --workspace` | Keep the session list beside interactive agent terminals. |
 | `agents --window` | Open the optional macOS app window. |
 | `agents -h` | Show command instructions. |
+| `agents -v` / `agents --version` | Show the installed version and build information. |
 
 Panel and floating modes do not require tmux. Workspace mode requires
 tmux 3.6 or later, installed locally:
@@ -61,25 +63,54 @@ terminal-workspace setup-hooks
 terminal-workspace setup-hooks --apply
 ```
 
+If the registered installation path changed, setup migrates its companion hooks
+and existing status-line wrapper. Unrelated hooks and rendered output are preserved.
+After a partial setup failure, rerun the same command to finish the migration.
+
+Setup enables the Claude session observer by default so ordinary `claude`
+launches register. It preserves your status line's output or runs silently when
+you have no custom renderer, refreshing every five seconds to recover a missed
+startup observation. Existing renderers keep their refresh settings.
+After updating an older installation, rerun
+`terminal-workspace setup-hooks --apply` once.
+
 Start or resume native clients after setup so they load the hooks. Allow macOS
-Automation access to Ghostty when prompted; the app reuses that grant. Questions
-and permissions are answered in the agent session. Acknowledging panel attention
-does not answer a question or grant permission.
+Automation access to Ghostty when prompted; the app reuses that grant. Answer
+questions and permissions in the agent session, or use the panel's answer field
+for supported root Codex async questions. Other requests retain `:open` to return
+to the agent session. Acknowledging panel attention does not answer a question
+or grant permission.
+
+## Pi trial
+
+Pi 1.2.0 is also supported for names, model/effort, activity and errors. Install
+Pi separately, run `terminal-workspace setup-pi --apply`, then restart Pi or use
+`/reload`. Use ordinary `pi` sessions with panel/floating mode, or `:new pi` in
+workspace mode. Questions and child agents are not tracked yet.
 
 ## Controls
 
-Use `j/k` or arrows to select, Enter to open, `h/l` for list/details, `/` to search, and
-`?` for all controls. Tab changes list/detail focus; `{` and `}` follow
-that focus. `v` freezes mouse selection; Cmd+C copies in Ghostty. `V`, `j/k`, and
-`y` select and copy detail lines. In panel/floating mode, `:d` removes a session
-from the list; `:attach` / `:a` restores it. In workspace, `:d` detaches a viewer; `:close`,
-then `:close!`, confirms closing its selected agent terminal. Detached jobs may
-continue. Cmd+Option+Left/Right
+Use `j/k` or arrows to select and Enter to open. Tab or Shift+Tab switches
+Sessions and Details; `h/j/k/l` or arrows move the Details cursor. `/` searches
+sessions and `?` shows contextual help. `v` selects characters, `V` selects lines,
+and `y` copies the highlighted range. Drag within Details and release to copy;
+`:copy` copies the expanded Details document. In every terminal panel mode,
+`:d` or `:remove` removes a session from the list; `:attach` / `:a` restores it.
+In workspace, `:detach` disconnects its viewer; `:close`, then `:close!`, confirms
+closing its selected agent terminal. Detached jobs may continue. Cmd+Option+Left/Right
 focuses the panel/agent split. Workspace windows start with floating off.
 `F` toggles floating for the containing Ghostty
 window. `:q` closes the panel and leaves agents running.
 Esc, then `:`, opens a visible command line. Enter runs it; Esc cancels it.
 Plain `q` never closes the panel.
+
+For child details, type `:children`, then Enter; select a child and press Enter
+again. `:requests` opens the current session's or opened child's request list.
+In the request list, `:dismiss` hides an obsolete request locally; `:dismissed`
+shows dismissed requests and Enter restores one. No answer or approval is sent.
+Esc returns. In the child list, `:d` hides a child and `:attach` restores one.
+`:clear-history` hides ended child turns; later turns appear again. Provider
+logs and running processes stay intact.
 
 ## Files and updates
 
@@ -96,7 +127,8 @@ Versions before 0.3.2 can update by running the installer again.
 
 For a bug report, include what happened and the output of
 `agents --diagnostics > agent-companion-report.json`. The file includes at most
-128 recent action timings/error codes plus app version and platform. It excludes
+128 recent action timings/error codes and 64 workspace observations (process IDs,
+rendered row counts and errors), plus app version and platform. It excludes
 session content and paths; nothing is uploaded automatically.
 
  No histories, credentials, private source or
