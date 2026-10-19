@@ -125,6 +125,11 @@ activation, preserves launchers, local state and the previous version directory,
 and leaves running agents alone. Reopen your panel to use the new version.
 Versions before 0.3.2 can update by running the installer again.
 
+For a development build prepared on your own Mac, run `agents --update --local`.
+This installs the latest prepared local package; it does not compile unfinished
+source. Preparing a local build requires the private source checkout and its
+developer tools, so beta testers normally use `agents --update`.
+
 For a bug report, include what happened and the output of
 `agents --diagnostics > agent-companion-report.json`. The file includes at most
 128 recent action timings/error codes and 64 workspace observations (process IDs,

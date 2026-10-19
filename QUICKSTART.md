@@ -35,6 +35,8 @@
 - **Help:** `?` lists controls; `agents -h` shows command-line options.
 - **Update:** `agents --update`. Reopen the panel to load the new version.
 - **Version:** `agents -v` or `agents --version` shows the installed build.
+- **Local development build:** `agents --update --local` installs the latest
+  package prepared on your Mac, without a version or checkout path.
 - **Report a bug:** describe what you did and what happened; include the output of
   `agents --diagnostics > agent-companion-report.json`. It contains recent timings
   and error codes, plus workspace process IDs and row counts. It excludes session
