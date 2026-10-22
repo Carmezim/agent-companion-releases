@@ -15,7 +15,9 @@
 - **Move and open:** `j` / `k` or arrows select; Enter opens the agent.
 - **Find:** `/` searches. Enter keeps the search; Esc clears it.
 - **Read details:** Tab or Shift+Tab switches Sessions and Details. Use `h/j/k/l` or arrows to move the visible cursor; `{` / `}` jumps sections. Enter expands
-  a group, answers a question, or inspects a request or child. Sections start expanded.
+  a group, answers a question, or inspects a request or child. Current work and
+  pending input start open; earlier requests, saved context and session metadata
+  start collapsed.
 - **Questions:** Enter on a question opens its answer field for supported Codex
   async requests. Choose with `j/k` or arrows; Enter sends. **Write an answer**
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`

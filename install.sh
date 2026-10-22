@@ -24,7 +24,7 @@ if [[ "${major%%.*}" -lt 13 ]]; then
   printf 'macOS 13 or later is required.\n' >&2
   exit 1
 fi
-data_root="${XDG_DATA_HOME:-$HOME/.local/share}"
+data_root="${XDG_DATA_HOME:-${HOME:+$HOME/.local/share}}"
 bin_root="$HOME/.local/bin"
 releases="$data_root/agent-companion-releases"
 current="$data_root/agent-companion-current"
@@ -144,7 +144,20 @@ if [[ $runtime_only -eq 0 ]]; then for command in agents terminal-workspace; do
 #!/bin/bash
 # Agent companion binary launcher
 set -euo pipefail
-root="${AGENT_COMPANION_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/agent-companion-current}"
+data_root="${XDG_DATA_HOME:-${HOME:+$HOME/.local/share}}"
+root="${AGENT_COMPANION_HOME:-${data_root:?Set HOME or XDG_DATA_HOME}/agent-companion-current}"
+# Observers from older managed sessions follow the current installed release.
+if [[ "COMMAND_NAME" == terminal-workspace ]]; then
+  case "${1:-}" in
+    event|claude-statusline)
+      if [[ -n "$data_root" ]]; then
+        case "$root" in
+          "$data_root/agent-companion-releases/"*) root="$data_root/agent-companion-current" ;;
+        esac
+      fi
+      ;;
+  esac
+fi
 export AGENT_COMPANION_HOME="$root"
 exec "$root/scripts/COMMAND_NAME" "$@"
 LAUNCHER
@@ -166,8 +179,11 @@ else
   "$bin_root/terminal-workspace" --version
 fi
 complete=1
+if ! "$release/bin/agent-companion" setup-pi --refresh; then
+  printf 'The app is installed, but the optional Pi adapter could not be refreshed. Run terminal-workspace setup-pi to inspect it.\n' >&2
+fi
 if [[ $runtime_only -eq 1 ]]; then
-  printf '\nUpdated. Reopen your panel to use this version. Your agents keep running.\n'
+  printf '\nUpdated. Reopen your panel to use this version. Your agents keep running.\nEnable direct Claude tracking: terminal-workspace setup-hooks --apply; then restart and resume Claude.\n'
 else
-  printf '\nInstalled. Add ~/.local/bin to PATH if needed.\nOpen: agents --panel\nWorkspace: brew install tmux; agents --workspace\nEnable native tracking: terminal-workspace setup-hooks --apply\n'
+  printf '\nInstalled. Add ~/.local/bin to PATH if needed.\nOpen: agents --panel\nWorkspace: brew install tmux; agents --workspace\nEnable native tracking: terminal-workspace setup-hooks --apply; then start or resume your agents.\nPi tracking: terminal-workspace setup-pi --apply; then /reload inside Pi.\n'
 fi
