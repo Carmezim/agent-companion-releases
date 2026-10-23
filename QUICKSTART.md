@@ -7,7 +7,7 @@
   Existing status line output is preserved; without a custom renderer, the
   observer runs silently and retries idle observations every five seconds.
   After updating from an older version, rerun setup once.
-- **Pi trial:** with Pi 1.2.0 installed, run `terminal-workspace setup-pi --apply`,
+- **Pi trial:** with Pi 1.2.0 or 1.3.0 installed, run `terminal-workspace setup-pi --apply`,
   then `/reload` in Pi. Names, model, activity and errors are tracked; questions
   and child agents are not included yet. Workspace can start it with `:new pi`.
 - **Open:** `agents --floating` keeps the panel visible while you switch sessions.
@@ -19,7 +19,9 @@
   pending input start open; earlier requests, saved context and session metadata
   start collapsed.
 - **Questions:** Enter on a question opens its answer field for supported Codex
-  async requests. Choose with `j/k` or arrows; Enter sends. **Write an answer**
+  async requests with a verified shared-server connection. Type the option number
+  and Enter sends; arrows and clicks also select. Embedded Codex sessions must be
+  answered in Codex; the panel shows the reason if preparation fails. **Write an answer**
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
   lists requests; `:open` answers unsupported requests in the agent session.
   `:answered` or `:cancelled` clears a record already handled there without sending input.

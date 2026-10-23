@@ -77,16 +77,22 @@ After updating an older installation, rerun
 Start or resume native clients after setup so they load the hooks. Allow macOS
 Automation access to Ghostty when prompted; the app reuses that grant. Answer
 questions and permissions in the agent session, or use the panel's answer field
-for supported root Codex async questions. Other requests retain `:open` to return
+for supported root Codex async questions connected to a verified shared server.
+Enter on Answer opens a number field; type the option number and press Enter.
+Embedded Codex sessions require answering in Codex. Other requests retain `:open` to return
 to the agent session. Acknowledging panel attention does not answer a question
 or grant permission.
 
 ## Pi trial
 
-Pi 1.2.0 is also supported for names, model/effort, activity and errors. Install
+Pi 1.2.0 and 1.3.0 are also supported for names, model/effort, activity and errors. Install
 Pi separately, run `terminal-workspace setup-pi --apply`, then restart Pi or use
 `/reload`. Use ordinary `pi` sessions with panel/floating mode, or `:new pi` in
 workspace mode. Questions and child agents are not tracked yet.
+
+Native names take precedence for Codex, Claude and Pi. Unnamed sessions show an
+abbreviated native session ID in the list and the full ID in Details. Pi's `/name`
+command assigns a name. Native IDs that are not available yet keep an unnamed label.
 
 ## Controls
 
@@ -110,6 +116,11 @@ and supported native Claude links appear in Details. Checkout matches describe
 Git relationships, not which agent owns the work; multiple matches stay visible.
 Use `:pr URL` to choose an explicit session link. `:prs refresh 15s` saves a check
 interval; `r` requests fresh checks, including after authenticating `gh` again.
+Discovery uses the checkout recorded by the harness. If that directory is not a
+Git checkout, use `:pr URL` to associate a PR explicitly. Git, missing CLI,
+authentication, repository access and timeout failures have separate messages.
+`GH_TOKEN` or `GITHUB_TOKEN` can override a stored `gh` login; Companion preserves
+those choices and does not change credentials.
 
 For child details, type `:children`, then Enter; select a child and press Enter
 again. `:requests` opens the current session's or opened child's request list.
