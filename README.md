@@ -104,6 +104,13 @@ window. `:q` closes the panel and leaves agents running.
 Esc, then `:`, opens a visible command line. Enter runs it; Esc cancels it.
 Plain `q` never closes the panel.
 
+Optional PR tracking starts off. Type `:prs on` to enable it with your existing
+GitHub CLI login, or `:prs off` to stop it. Codex checkout branch/commit matches
+and supported native Claude links appear in Details. Checkout matches describe
+Git relationships, not which agent owns the work; multiple matches stay visible.
+Use `:pr URL` to choose an explicit session link. `:prs refresh 15s` saves a check
+interval; `r` requests fresh checks, including after authenticating `gh` again.
+
 For child details, type `:children`, then Enter; select a child and press Enter
 again. `:requests` opens the current session's or opened child's request list.
 In the request list, `:dismiss` hides an obsolete request locally; `:dismissed`

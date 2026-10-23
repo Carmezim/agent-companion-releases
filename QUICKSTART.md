@@ -23,6 +23,11 @@
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
   lists requests; `:open` answers unsupported requests in the agent session.
   `:answered` or `:cancelled` clears a record already handled there without sending input.
+- **PR tracking:** `:prs on` enables checks; `:prs off` stops them.
+  `:prs refresh 15s` saves the interval without enabling tracking. `r` refreshes
+  observations and requests fresh PR checks when enabled.
+  Codex checkout branch/commit matches appear automatically through your existing
+  `gh` login. `:pr URL` chooses an explicit session link instead.
 - **Reviewed:** after reading completed output, `:reviewed` clears its review
   marker. It leaves unanswered questions and errors alone.
 - **Copy:** `v` selects characters; `V` selects lines. Extend with arrows or Vim
