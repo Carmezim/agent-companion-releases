@@ -75,13 +75,35 @@ After updating an older installation, rerun
 `terminal-workspace setup-hooks --apply` once.
 
 Start or resume native clients after setup so they load the hooks. Allow macOS
-Automation access to Ghostty when prompted; the app reuses that grant. Answer
-questions and permissions in the agent session, or use the panel's answer field
-for supported root Codex async questions connected to a verified shared server.
-Enter on Answer opens a number field; type the option number and press Enter.
-Embedded Codex sessions require answering in Codex. Other requests retain `:open` to return
-to the agent session. Acknowledging panel attention does not answer a question
-or grant permission.
+Automation access to Ghostty when prompted; the app reuses that grant.
+
+For supported root Codex async questions connected to a verified shared server,
+Enter on **Answer** opens a number field. Type the option number and press Enter.
+Embedded Codex sessions require answering in Codex.
+
+Optional Claude panel answers use the native question hook. Enable them explicitly:
+
+```sh
+terminal-workspace setup-hooks --claude-questions panel --apply
+```
+
+Open a new or resumed Claude session and keep a compatible terminal panel open
+before the next question. **Answer question batch** collects all answers before
+you send them. For multiple selections, type comma-separated numbers or click
+checkboxes; Space toggles the highlighted choice. Written answers are supported.
+**Open in Claude**, Ctrl+O or `:open` returns unsent questions to Claude, even
+from another compatible panel. Esc closes only the local draft. Closing the
+hosting panel or an expired channel returns unsent questions to Claude's native dialog. Existing dialogs stay in Claude. To restore native
+answering for future sessions, run:
+
+```sh
+terminal-workspace setup-hooks --claude-questions native --apply
+```
+
+Ordinary setup and updates preserve your choice. Permission and plan approvals
+remain in the agent session. Pi panel answers are not supported. Other requests
+retain `:open` to return to the agent session. Acknowledging panel attention does
+not answer a question or grant permission.
 
 ## Pi trial
 

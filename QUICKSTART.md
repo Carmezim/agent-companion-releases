@@ -25,6 +25,13 @@
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
   lists requests; `:open` answers unsupported requests in the agent session.
   `:answered` or `:cancelled` clears a record already handled there without sending input.
+- **Optional Claude answers:** run `terminal-workspace setup-hooks --claude-questions panel --apply`,
+  then start or resume Claude with a terminal panel open. **Answer question batch**
+  collects choices or written answers before you send. Space toggles checkboxes;
+  comma-separated numbers select several choices. **Open in Claude**, Ctrl+O or
+  `:open` returns unsent questions to Claude. Esc closes only the draft. Existing dialogs, permission approvals and Pi questions use their
+  original session. Restore Claude's native answering with
+  `terminal-workspace setup-hooks --claude-questions native --apply`.
 - **PR tracking:** `:prs on` enables checks; `:prs off` stops them.
   `:prs refresh 15s` saves the interval without enabling tracking. `r` refreshes
   observations and requests fresh PR checks when enabled.
