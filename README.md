@@ -132,12 +132,18 @@ window. `:q` closes the panel and leaves agents running.
 Esc, then `:`, opens a visible command line. Enter runs it; Esc cancels it.
 Plain `q` never closes the panel.
 
+The session list fills available space when you resize a pane or sessions close,
+while preserving your selection. Discovery warnings clear when updates recover.
+
 Optional PR tracking starts off. Type `:prs on` to enable it with your existing
 GitHub CLI login, or `:prs off` to stop it. Codex checkout branch/commit matches
 and supported native Claude links appear in Details. Checkout matches describe
 Git relationships, not which agent owns the work; multiple matches stay visible.
 Use `:pr URL` to choose an explicit session link. `:prs refresh 15s` saves a check
 interval; `r` requests fresh checks, including after authenticating `gh` again.
+Confirmed merged PRs stop automatic status checks and do not become stale just
+from age. `r` still rechecks them; automatic checks resume if a successful check
+reports a different status.
 Discovery uses the checkout recorded by the harness. If that directory is not a
 Git checkout, use `:pr URL` to associate a PR explicitly. Git, missing CLI,
 authentication, repository access and timeout failures have separate messages.
