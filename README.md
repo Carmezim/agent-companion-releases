@@ -116,6 +116,13 @@ Native names take precedence for Codex, Claude and Pi. Unnamed sessions show an
 abbreviated native session ID in the list and the full ID in Details. Pi's `/name`
 command assigns a name. Native IDs that are not available yet keep an unnamed label.
 
+Supported Claude versions also supply native background sessions. These appear
+with a **Background** label. Enter shows a profile-scoped `claude attach` command
+to run yourself; Companion never attaches automatically. Child details separate
+**Assigned:** work from timestamped activity. An older report retains its age
+and previous-turn label. Claude's own UI may show progress prose that its native
+APIs do not expose.
+
 ## Controls
 
 Use `j/k` or arrows to select and Enter to open. Tab or Shift+Tab switches
