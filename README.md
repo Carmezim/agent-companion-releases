@@ -116,12 +116,18 @@ Native names take precedence for Codex, Claude and Pi. Unnamed sessions show an
 abbreviated native session ID in the list and the full ID in Details. Pi's `/name`
 command assigns a name. Native IDs that are not available yet keep an unnamed label.
 
-Supported Claude versions also supply native background sessions. These appear
-with a **Background** label. Enter shows a profile-scoped `claude attach` command
+Supported Claude versions also supply native background sessions with verified
+running processes. These appear with a **Background** label. Old saved jobs stay
+out of the default panel. Enter shows a profile-scoped `claude attach` command
 to run yourself; Companion never attaches automatically. Child details separate
 **Assigned:** work from timestamped activity. An older report retains its age
 and previous-turn label. Claude's own UI may show progress prose that its native
 APIs do not expose.
+
+Claude may keep its original terminal alive after sending work to the background.
+The panel follows that native handoff link and shows the worker once. Genuine
+forks remain separate. A frontend retained for a pending request or an unverified
+handoff says **Backgrounded**, instead of animating an old working observation.
 
 ## Controls
 
