@@ -180,6 +180,11 @@ logs and running processes stay intact.
 - Local session state: `~/.local/state/terminal-workspace/`.
 - Workspace socket: `workspace.sock` in that state directory.
 
+Ended or superseded entries expire 24 hours after their last observation.
+Companion removes them on the next tracked session start or event, including
+from `agents --resume`. For older conversations, use your provider's session
+picker. Provider conversation files stay intact.
+
 Run `agents --update` to install the latest public release. It verifies before
 activation, preserves launchers, local state and the previous version directory,
 and leaves running agents alone. Reopen your panel to use the new version.
