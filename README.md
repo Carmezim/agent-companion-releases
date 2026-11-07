@@ -1,5 +1,7 @@
 # Agent companion for Apple Silicon
 
+For someone installing the public binary release without the source repository.
+
 Keep local Codex and Claude sessions visible in a terminal panel. The companion
 is compiled Zig code; it makes no model requests and never switches providers.
 
@@ -16,8 +18,8 @@ bash /tmp/agent-companion-install.sh
 ```
 
 No compiler, Python, GitHub account or source repository access is required.
-The installer checks the archive checksum, runtime receipt and app signature.
-Builds use a local ad hoc signature; they are not Apple notarized releases.
+The installer checks the archive checksum and the runtime receipt. The
+binaries are not Apple notarized.
 
 If `agents` is not found, add its directory to your shell configuration:
 
@@ -32,7 +34,6 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents --panel` | Run inside the current terminal pane or tab. |
 | `agents --floating` | Open a separate Ghostty TUI window above other windows. |
 | `agents --workspace` | Keep the session list beside interactive agent terminals. |
-| `agents --window` | Open the optional macOS app window. |
 | `agents -h` | Show command instructions. |
 | `agents -v` / `agents --version` | Show the installed version and build information. |
 
@@ -75,7 +76,7 @@ After updating an older installation, rerun
 `terminal-workspace setup-hooks --apply` once.
 
 Start or resume native clients after setup so they load the hooks. Allow macOS
-Automation access to Ghostty when prompted; the app reuses that grant.
+Automation access to Ghostty when prompted; later opens reuse that grant.
 
 For supported root Codex async questions connected to a verified shared server,
 Enter on **Answer** opens a number field. Type the option number and press Enter.
@@ -183,6 +184,12 @@ Run `agents --update` to install the latest public release. It verifies before
 activation, preserves launchers, local state and the previous version directory,
 and leaves running agents alone. Reopen your panel to use the new version.
 Versions before 0.3.2 can update by running the installer again.
+
+Each release carries two archives of the same runtime. The installer downloads
+`agent-companion-runtime-macos-arm64.tar.gz`. Installs from 0.3.37 and earlier
+update through `agent-companion-macos-arm64.tar.gz`, which also holds three
+placeholder files where the retired window used to be. They are never run; the
+placeholder program only says to open the panel with `agents --panel`.
 
 For a development build prepared on your own Mac, run `agents --update --local`.
 This installs the latest prepared local package; it does not compile unfinished

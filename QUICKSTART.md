@@ -1,5 +1,7 @@
 # Agent companion beta
 
+For a new user who wants the essentials on one page.
+
 - **Install:** run the terminal installer below. Apple Silicon Mac, macOS 13+.
 - **Enable tracking:** run `terminal-workspace setup-hooks --apply`, then restart
   and resume Codex/Claude sessions when convenient so they load the hooks.

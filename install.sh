@@ -36,8 +36,57 @@ for path in "$data_root" "$bin_root" "$releases"; do
   if [[ ! -O "$path" ]]; then printf 'Directory is not owned by you: %s\n' "$path" >&2; exit 1; fi
 done
 install_lock="$data_root/.agent-companion-install.lock"
-mkdir "$install_lock" 2>/dev/null || { printf 'Another installation is running; retry after it finishes.\n' >&2; exit 1; }
-trap 'rmdir -- "$install_lock"' EXIT
+if [[ -d "$install_lock" && ! -L "$install_lock" ]]; then
+  printf 'A legacy installation lock remains at %s. Once no installer is running, remove that empty directory with rmdir and retry.\n' "$install_lock" >&2
+  exit 1
+fi
+if [[ -L "$install_lock" || ( -e "$install_lock" && ( ! -f "$install_lock" || ! -O "$install_lock" ) ) ]]; then
+  printf 'Invalid installation lock: %s\n' "$install_lock" >&2; exit 1
+fi
+# Keep the open description in this shell. The helper borrows it; it must never
+# issue LOCK_UN, which would also release the shell's lock. A killed installer
+# can leave the empty file, but not a lock after its last descriptor closes.
+exec 9<>"$install_lock"
+installation_lock() {
+  /usr/bin/perl -MFcntl=:flock,:mode -e '
+    my ($operation, $path) = @ARGV;
+    my @opened = stat(STDIN);
+    sub valid {
+      my ($info) = @_;
+      return @$info && S_ISREG($info->[2]) && $info->[3] == 1 &&
+        $info->[4] == $> && $info->[7] == 0 && !($info->[2] & 0022);
+    }
+    die "Invalid installation lock: $path\n" unless valid(\@opened);
+    if ($operation eq "acquire") {
+      unless (flock(STDIN, LOCK_EX | LOCK_NB)) {
+        exit 75 if $!{EWOULDBLOCK} || $!{EAGAIN};
+        die "Cannot lock $path: $!\n";
+      }
+    }
+    # An opener can retain the old inode while the previous owner removes its
+    # name. Do not install or unlink unless this locked descriptor still names it.
+    my @named = lstat($path);
+    die "Installation lock changed; retry: $path\n" unless valid(\@named) &&
+      $opened[0] == $named[0] && $opened[1] == $named[1];
+    unlink($path) or die "Cannot remove installation lock: $!\n" if $operation eq "release";
+  ' "$1" "$install_lock" <&9
+}
+if installation_lock acquire; then :; else
+  result=$?
+  if [[ $result -eq 75 ]]; then printf 'Another installation is running; retry after it finishes.\n' >&2; fi
+  exit 1
+fi
+# A signal to Bash can leave its foreground child alive. Keep its lock name and
+# staging files: rollback, deletion or unlinking could race that child's work.
+# The next installer can reuse this regular file after the last descriptor closes.
+interrupted_installation() {
+  trap - EXIT HUP INT TERM
+  exit "$1"
+}
+trap 'interrupted_installation 129' HUP
+trap 'interrupted_installation 130' INT
+trap 'interrupted_installation 143' TERM
+trap 'installation_lock release' EXIT
 if [[ -e "$current" && ! -L "$current" ]]; then
   printf 'Current release path is occupied: %s\n' "$current" >&2; exit 1
 fi
@@ -73,11 +122,14 @@ cleanup() {
     done; fi
   fi
   rm -rf -- "$stage"
-  rmdir -- "$install_lock"
+  installation_lock release
   return "$result"
 }
 trap cleanup EXIT
-archive=agent-companion-macos-arm64.tar.gz
+# Installers up to 0.3.37 download agent-companion-macos-arm64.tar.gz and
+# require its eight-file layout; releases keep that archive for them
+# (scripts/package-archives). This installer uses the runtime archive.
+archive=agent-companion-runtime-macos-arm64.tar.gz
 if [[ -n "$directory" ]]; then
   [[ "$directory" == /* ]] || { printf 'Release directory must be absolute.\n' >&2; exit 2; }
   cp "$directory/$archive" "$directory/SHA256SUMS" "$stage/"
@@ -93,9 +145,6 @@ expected="$(/usr/bin/awk -v name="$archive" '$2 == name { print $1 }' "$stage/SH
 actual="$(/usr/bin/shasum -a 256 "$stage/$archive")"
 [[ "${actual%% *}" == "$expected" ]] || { printf 'Release checksum mismatch.\n' >&2; exit 1; }
 cat > "$stage/expected-files" <<'FILES'
-Agent Companion.app/Contents/Info.plist
-Agent Companion.app/Contents/MacOS/agent-companion-ui
-Agent Companion.app/Contents/_CodeSignature/CodeResources
 bin/agent-companion
 bin/agent-companion-tui
 install-receipt.json
@@ -116,16 +165,16 @@ FILES
   }
 ' > "$stage/archive.tar"
 /usr/bin/tar -tf "$stage/archive.tar" | /usr/bin/awk '
-  NR > 8 || length($0) > 128 { exit 1 }
+  NR > 5 || length($0) > 128 { exit 1 }
   { print }
-  END { if (NR != 8) exit 1 }
+  END { if (NR != 5) exit 1 }
 ' | LC_ALL=C /usr/bin/sort > "$stage/actual-files"
 /usr/bin/cmp -s "$stage/expected-files" "$stage/actual-files" || { printf 'Unexpected release archive contents.\n' >&2; exit 1; }
 # BSD tar with numeric owners has fixed numeric UID, GID and size columns.
 LC_ALL=C /usr/bin/tar -tvf "$stage/archive.tar" --numeric-owner | /usr/bin/awk '
   substr($0,1,1) != "-" || $5 !~ /^[0-9]+$/ || $5 > 33554432 { exit 1 }
   { total += $5; count++ }
-  END { if (total > 104857600 || count != 8) exit 1 }
+  END { if (total > 104857600 || count != 5) exit 1 }
 ' || { printf 'Archive contains links, special files or oversized contents.\n' >&2; exit 1; }
 mkdir "$stage/runtime"
 /usr/bin/tar -xf "$stage/archive.tar" -C "$stage/runtime"
