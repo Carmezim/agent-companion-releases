@@ -79,8 +79,9 @@ Start or resume native clients after setup so they load the hooks. Allow macOS
 Automation access to Ghostty when prompted; later opens reuse that grant.
 
 For supported root Codex async questions connected to a verified shared server,
-Enter on **Answer** opens a number field. Type the option number and press Enter.
-Embedded Codex sessions require answering in Codex.
+Enter on a suggested answer, or its number (keys 1-9), opens the full answer with
+it selected, and Enter there sends it; Enter on **Answer** opens the choices to
+pick from. Embedded Codex sessions require answering in Codex.
 
 Optional Claude panel answers use the native question hook. Enable them explicitly:
 

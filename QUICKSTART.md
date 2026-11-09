@@ -20,9 +20,11 @@ For a new user who wants the essentials on one page.
   a group, answers a question, or inspects a request or child. Current work and
   pending input start open; earlier requests, saved context and session metadata
   start collapsed.
-- **Questions:** Enter on a question opens its answer field for supported Codex
-  async requests with a verified shared-server connection. Type the option number
-  and Enter sends; arrows and clicks also select. Embedded Codex sessions must be
+- **Questions:** for supported Codex async requests with a verified
+  shared-server connection, Enter on a suggested answer, or its number (keys 1-9),
+  opens the full answer with it selected, and Enter there sends it.
+  Enter on the question opens its answer field: arrows or a number pick, Enter
+  answers, and clicks only select. Embedded Codex sessions must be
   answered in Codex; the panel shows the reason if preparation fails. **Write an answer**
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
   lists requests; `:open` answers unsupported requests in the agent session.
@@ -52,7 +54,8 @@ For a new user who wants the essentials on one page.
 - **Quit:** press Esc, type `:q`, then Enter. Your agents keep running.
 - **Help:** `?` lists controls; `agents -h` shows command-line options.
 - **Update:** `agents --update`. Reopen the panel to load the new version.
-- **Version:** `agents -v` or `agents --version` shows the installed build.
+- **Version:** the panel shows its running version at the bottom right.
+  `agents -v` or `agents --version` shows the installed build.
 - **Local development build:** `agents --update --local` installs the latest
   package prepared on your Mac, without a version or checkout path.
 - **Report a bug:** describe what you did and what happened; include the output of
