@@ -7,7 +7,8 @@ is compiled Zig code; it makes no model requests and never switches providers.
 
 ## Install
 
-Requires Apple Silicon, macOS 13 or later, and Ghostty with AppleScript support.
+Requires Apple Silicon and macOS 13 or later. Floating windows and navigation to
+Ghostty sessions require Ghostty with AppleScript support.
 Install Codex or Claude separately using their own account and setup instructions.
 
 Download and run the installer:
@@ -36,6 +37,10 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents --workspace` | Keep the session list beside interactive agent terminals. |
 | `agents -h` | Show command instructions. |
 | `agents -v` / `agents --version` | Show the installed version and build information. |
+
+In Rex, use `agents --panel` for read-only Codex activity after enabling the
+native hooks below. Opening sessions, answering questions and last-run timing
+remain unavailable there. Rex floating mode is planned for the next minor release.
 
 Panel and floating modes do not require tmux. Workspace mode requires
 tmux 3.6 or later, installed locally:
@@ -103,16 +108,17 @@ terminal-workspace setup-hooks --claude-questions native --apply
 ```
 
 Ordinary setup and updates preserve your choice. Permission and plan approvals
-remain in the agent session. Pi panel answers are not supported. Other requests
-retain `:open` to return to the agent session. Acknowledging panel attention does
-not answer a question or grant permission.
+remain in the agent session. Pi panel answers are not supported. For sessions
+with a supported terminal connection, `:open` returns to the agent for other
+requests. For read-only Codex sessions, switch to the original terminal yourself.
+Acknowledging panel attention does not answer a question or grant permission.
 
 ## Pi trial
 
-Pi 1.2.0 and 1.3.0 are also supported for names, model/effort, activity and errors. Install
-Pi separately, run `terminal-workspace setup-pi --apply`, then restart Pi or use
-`/reload`. Use ordinary `pi` sessions with panel/floating mode, or `:new pi` in
-workspace mode. Questions and child agents are not tracked yet.
+Pi 1.2.0, 1.3.0 and 1.5.0 are also supported for names, model/effort, activity and
+errors. Install Pi separately, run `terminal-workspace setup-pi --apply`, then
+restart Pi or use `/reload`. Use ordinary `pi` sessions with panel/floating mode,
+or `:new pi` in workspace mode. Questions and child agents are not tracked yet.
 
 Native names take precedence for Codex, Claude and Pi. Unnamed sessions show an
 abbreviated native session ID in the list and the full ID in Details. Pi's `/name`
@@ -133,7 +139,9 @@ handoff says **Backgrounded**, instead of animating an old working observation.
 
 ## Controls
 
-Use `j/k` or arrows to select and Enter to open. Tab or Shift+Tab switches
+Use `j/k` or arrows to select; Enter opens sessions with a supported terminal
+connection. For read-only Codex sessions, switch to the original terminal yourself.
+Tab or Shift+Tab switches
 Sessions and Details; `h/j/k/l` or arrows move the Details cursor. `/` searches
 sessions and `?` shows contextual help. `v` selects characters, `V` selects lines,
 and `y` copies the highlighted range. Drag within Details and release to copy;
@@ -167,7 +175,8 @@ those choices and does not change credentials.
 
 For child details, type `:children`, then Enter; select a child and press Enter
 again. `:requests` opens the current session's or opened child's request list.
-In the request list, `:dismiss` hides an obsolete request locally; `:dismissed`
+For sessions with a supported terminal connection, `:dismiss` in the request
+list hides an obsolete request locally; `:dismissed`
 shows dismissed requests and Enter restores one. No answer or approval is sent.
 Esc returns. In the child list, `:d` hides a child and `:attach` restores one.
 `:clear-history` hides ended child turns; later turns appear again. Provider
@@ -186,16 +195,16 @@ Companion removes them on the next tracked session start or event, including
 from `agents --resume`. For older conversations, use your provider's session
 picker. Provider conversation files stay intact.
 
-Run `agents --update` to install the latest public release. It verifies before
-activation, preserves launchers, local state and the previous version directory,
+Run `agents --update` to install the latest public release. It verifies that
+release's installer and files before running it, preserves launchers, local state and the previous version directory,
 and leaves running agents alone. Reopen your panel to use the new version.
 Versions before 0.3.2 can update by running the installer again.
 
-Each release carries two archives of the same runtime. The installer downloads
-`agent-companion-runtime-macos-arm64.tar.gz`. Installs from 0.3.37 and earlier
-update through `agent-companion-macos-arm64.tar.gz`, which also holds three
-placeholder files where the retired window used to be. They are never run; the
-placeholder program only says to open the panel with `agents --panel`.
+The next release keeps the five-file runtime archive so installs from 0.3.38
+through 0.3.40 can acquire the new updater. Subsequent updates use the target
+release's installer, allowing its runtime layout to evolve. Installs from
+0.3.37 and earlier must rerun the public installer; new releases omit their
+extra compatibility archive. Previously published release assets stay available.
 
 For a development build prepared on your own Mac, run `agents --update --local`.
 This installs the latest prepared local package; it does not compile unfinished

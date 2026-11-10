@@ -9,12 +9,17 @@ For a new user who wants the essentials on one page.
   Existing status line output is preserved; without a custom renderer, the
   observer runs silently and retries idle observations every five seconds.
   After updating from an older version, rerun setup once.
-- **Pi trial:** with Pi 1.2.0 or 1.3.0 installed, run `terminal-workspace setup-pi --apply`,
-  then `/reload` in Pi. Names, model, activity and errors are tracked; questions
-  and child agents are not included yet. Workspace can start it with `:new pi`.
-- **Open:** `agents --floating` keeps the panel visible while you switch sessions.
-  Use `agents --panel` to run it in your current terminal pane instead.
-- **Move and open:** `j` / `k` or arrows select; Enter opens the agent.
+- **Pi trial:** with Pi 1.2.0, 1.3.0 or 1.5.0 installed,
+  run `terminal-workspace setup-pi --apply`, then `/reload` in Pi. Names, model,
+  activity and errors are tracked; questions and child agents are not included
+  yet. Workspace can start it with `:new pi`.
+- **Open:** `agents --floating` opens a floating Ghostty window while you switch
+  sessions. Use `agents --panel` in your current terminal pane. In Rex, this view
+  provides read-only Codex activity; session opening, answers and run timing
+  remain unavailable there.
+- **Move and open:** `j` / `k` or arrows select; Enter opens sessions with a
+  supported terminal connection. Switch to read-only sessions in their original
+  terminal yourself.
 - **Find:** `/` searches. Enter keeps the search; Esc clears it.
 - **Read details:** Tab or Shift+Tab switches Sessions and Details. Use `h/j/k/l` or arrows to move the visible cursor; `{` / `}` jumps sections. Enter expands
   a group, answers a question, or inspects a request or child. Current work and
@@ -27,8 +32,10 @@ For a new user who wants the essentials on one page.
   answers, and clicks only select. Embedded Codex sessions must be
   answered in Codex; the panel shows the reason if preparation fails. **Write an answer**
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
-  lists requests; `:open` answers unsupported requests in the agent session.
-  `:answered` or `:cancelled` clears a record already handled there without sending input.
+  lists requests. With a supported terminal connection, `:open` returns to the
+  agent for requests the panel cannot answer; `:answered` or `:cancelled` clears
+  a record already handled there without sending input. For read-only Codex
+  sessions, answer in the original terminal; these record controls are disabled.
 - **Optional Claude answers:** run `terminal-workspace setup-hooks --claude-questions panel --apply`,
   then start or resume Claude with a terminal panel open. **Answer question batch**
   collects choices or written answers before you send. Space toggles checkboxes;
@@ -41,8 +48,9 @@ For a new user who wants the essentials on one page.
   observations and requests fresh PR checks when enabled.
   Codex checkout branch/commit matches appear automatically through your existing
   `gh` login. `:pr URL` chooses an explicit session link instead.
-- **Reviewed:** after reading completed output, `:reviewed` clears its review
-  marker. It leaves unanswered questions and errors alone.
+- **Reviewed:** for sessions with a supported terminal connection, `:reviewed`
+  clears the review marker after you read completed output. It leaves unanswered
+  questions and errors alone.
 - **Copy:** `v` selects characters; `V` selects lines. Extend with arrows or Vim
   keys, then `y` copies. Drag within Details and release to copy immediately.
   `:copy` copies all expanded Details, including offscreen text. The highlight
@@ -94,8 +102,9 @@ are optional extras; beta testers can use the panel without them.
 
 Green means working, red means an error or interruption, purple means review is
 requested. An **unknown outcome** means a request was seen but its answer or
-cancellation was not; it may already be resolved. `:open` answers unsupported
-requests in their agent session.
+cancellation was not; it may already be resolved. With a supported terminal
+connection, `:open` returns to the agent for requests the panel cannot answer.
+For read-only Codex sessions, switch to the original terminal yourself.
 
 An open panel checks native Codex history for matching answers when a callback
 was missed. This clears supported captured questions automatically. Older records
