@@ -39,8 +39,9 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents -v` / `agents --version` | Show the installed version and build information. |
 
 In Rex, use `agents --panel` for read-only Codex activity after enabling the
-native hooks below. Opening sessions, answering questions and last-run timing
-remain unavailable there. Rex floating mode is planned for the next minor release.
+native hooks below, or Pi activity after enabling its adapter. Opening sessions,
+answering questions and last-run timing remain unavailable there. Rex floating
+mode is planned for the next minor release.
 
 Panel and floating modes do not require tmux. Workspace mode requires
 tmux 3.6 or later, installed locally:
