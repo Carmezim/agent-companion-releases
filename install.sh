@@ -232,7 +232,7 @@ if ! "$release/bin/agent-companion" setup-pi --refresh; then
   printf 'The app is installed, but the optional Pi adapter could not be refreshed. Run terminal-workspace setup-pi to inspect it.\n' >&2
 fi
 if [[ $runtime_only -eq 1 ]]; then
-  printf '\nUpdated. Reopen your panel to use this version. Your agents keep running.\nEnable direct Claude tracking: terminal-workspace setup-hooks --apply; then restart and resume Claude.\n'
+  printf '\nUpdated. Reopen your panel to use this version. Your agents keep running.\nPi users: run /reload inside each open Pi session to load the refreshed adapter.\nEnable direct Claude tracking: terminal-workspace setup-hooks --apply; then restart and resume Claude.\n'
 else
   printf '\nInstalled. Add ~/.local/bin to PATH if needed.\nOpen: agents --panel\nWorkspace: brew install tmux; agents --workspace\nEnable native tracking: terminal-workspace setup-hooks --apply; then start or resume your agents.\nPi tracking: terminal-workspace setup-pi --apply; then /reload inside Pi.\n'
 fi

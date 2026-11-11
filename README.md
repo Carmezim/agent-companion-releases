@@ -199,6 +199,7 @@ picker. Provider conversation files stay intact.
 Run `agents --update` to install the latest public release. It verifies that
 release's installer and files before running it, preserves launchers, local state and the previous version directory,
 and leaves running agents alone. Reopen your panel to use the new version.
+Run `/reload` inside each open Pi session to load its refreshed adapter.
 Versions before 0.3.2 can update by running the installer again.
 
 The next release keeps the five-file runtime archive so installs from 0.3.38

@@ -15,7 +15,7 @@ For a new user who wants the essentials on one page.
   yet. Workspace can start it with `:new pi`.
 - **Open:** `agents --floating` opens a floating Ghostty window while you switch
   sessions. Use `agents --panel` in your current terminal pane. In Rex, this view
-  provides read-only Codex activity; session opening, answers and run timing
+  provides read-only Codex and Pi activity; session opening, answers and run timing
   remain unavailable there.
 - **Move and open:** `j` / `k` or arrows select; Enter opens sessions with a
   supported terminal connection. Switch to read-only sessions in their original
@@ -34,7 +34,7 @@ For a new user who wants the essentials on one page.
   opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
   lists requests. With a supported terminal connection, `:open` returns to the
   agent for requests the panel cannot answer; `:answered` or `:cancelled` clears
-  a record already handled there without sending input. For read-only Codex
+  a record already handled there without sending input. For read-only
   sessions, answer in the original terminal; these record controls are disabled.
 - **Optional Claude answers:** run `terminal-workspace setup-hooks --claude-questions panel --apply`,
   then start or resume Claude with a terminal panel open. **Answer question batch**
@@ -62,6 +62,7 @@ For a new user who wants the essentials on one page.
 - **Quit:** press Esc, type `:q`, then Enter. Your agents keep running.
 - **Help:** `?` lists controls; `agents -h` shows command-line options.
 - **Update:** `agents --update`. Reopen the panel to load the new version.
+  Run `/reload` inside each open Pi session to load its refreshed adapter.
 - **Version:** the panel shows its running version at the bottom right.
   `agents -v` or `agents --version` shows the installed build.
 - **Local development build:** `agents --update --local` installs the latest
@@ -104,7 +105,7 @@ Green means working, red means an error or interruption, purple means review is
 requested. An **unknown outcome** means a request was seen but its answer or
 cancellation was not; it may already be resolved. With a supported terminal
 connection, `:open` returns to the agent for requests the panel cannot answer.
-For read-only Codex sessions, switch to the original terminal yourself.
+For read-only sessions, switch to the original terminal yourself.
 
 An open panel checks native Codex history for matching answers when a callback
 was missed. This clears supported captured questions automatically. Older records
