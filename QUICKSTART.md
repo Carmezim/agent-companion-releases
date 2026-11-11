@@ -13,8 +13,10 @@ For a new user who wants the essentials on one page.
   run `terminal-workspace setup-pi --apply`, then `/reload` in Pi. Names, model,
   activity and errors are tracked; questions and child agents are not included
   yet. Workspace can start it with `:new pi`.
-- **Open:** `agents --floating` opens a floating Ghostty window while you switch
-  sessions. Use `agents --panel` in your current terminal pane. In Rex, this view
+- **Open:** `agents --floating` opens a Rex overlay that follows tabs in its
+  session, or a separate floating Ghostty window. In Rex, `F` docks only the
+  panel; `F` again floats it. Docked and minimized panels stay in their tab.
+  Use `agents --panel` in your current terminal pane. In Rex, either view
   provides read-only Codex and Pi activity; session opening, answers and run timing
   remain unavailable there.
 - **Move and open:** `j` / `k` or arrows select; Enter opens sessions with a

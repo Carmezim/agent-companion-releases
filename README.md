@@ -7,8 +7,9 @@ is compiled Zig code; it makes no model requests and never switches providers.
 
 ## Install
 
-Requires Apple Silicon and macOS 13 or later. Floating windows and navigation to
-Ghostty sessions require Ghostty with AppleScript support.
+Requires Apple Silicon and macOS 13 or later. Ghostty floating windows and
+session navigation require Ghostty with AppleScript support. Rex floating mode
+requires a local Rex API 12 server and its `rex` CLI on PATH.
 Install Codex or Claude separately using their own account and setup instructions.
 
 Download and run the installer:
@@ -33,15 +34,19 @@ export PATH="$HOME/.local/bin:$PATH"
 | Command | Behavior |
 | --- | --- |
 | `agents --panel` | Run inside the current terminal pane or tab. |
-| `agents --floating` | Open a separate Ghostty TUI window above other windows. |
+| `agents --floating` | Open a Rex overlay that follows tabs, or a separate floating Ghostty window. |
 | `agents --workspace` | Keep the session list beside interactive agent terminals. |
 | `agents -h` | Show command instructions. |
 | `agents -v` / `agents --version` | Show the installed version and build information. |
 
-In Rex, use `agents --panel` for read-only Codex activity after enabling the
+In Rex, use either view for read-only Codex activity after enabling the
 native hooks below, or Pi activity after enabling its adapter. Opening sessions,
-answering questions and last-run timing remain unavailable there. Rex floating
-mode is planned for the next minor release.
+answering questions and last-run timing remain unavailable there.
+The floating panel follows tabs within its Rex session without changing their
+focus. Click it to use its keys. `F` docks only the panel beside a tiled pane;
+`F` again floats it. Docked and minimized panels stay in their tab. Closing the
+current tab also closes the panel; `:q` closes only the view. If following stops,
+the view stays readable with a warning. Close it before reopening.
 
 Panel and floating modes do not require tmux. Workspace mode requires
 tmux 3.6 or later, installed locally:
