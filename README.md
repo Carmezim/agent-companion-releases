@@ -2,7 +2,7 @@
 
 For someone installing the public binary release without the source repository.
 
-Keep local Codex and Claude sessions visible in a terminal panel. The companion
+Keep local Codex, Claude and Pi sessions visible in a terminal panel. The companion
 is compiled Zig code; it makes no model requests and never switches providers.
 
 ## Install
@@ -111,7 +111,7 @@ terminal-workspace setup-hooks --claude-questions native --apply
 Ordinary setup and updates preserve your choice. Permission and plan approvals
 remain in the agent session. Pi panel answers are not supported. For sessions
 with a supported terminal connection, `:open` returns to the agent for other
-requests. For read-only Codex sessions, switch to the original terminal yourself.
+requests. For read-only sessions, switch to the original terminal yourself.
 Acknowledging panel attention does not answer a question or grant permission.
 
 ## Pi trial
@@ -141,7 +141,7 @@ handoff says **Backgrounded**, instead of animating an old working observation.
 ## Controls
 
 Use `j/k` or arrows to select; Enter opens sessions with a supported terminal
-connection. For read-only Codex sessions, switch to the original terminal yourself.
+connection. For read-only sessions, switch to the original terminal yourself.
 Tab or Shift+Tab switches
 Sessions and Details; `h/j/k/l` or arrows move the Details cursor. `/` searches
 sessions and `?` shows contextual help. `v` selects characters, `V` selects lines,
