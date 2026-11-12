@@ -50,6 +50,8 @@ For a new user who wants the essentials on one page.
   observations and requests fresh PR checks when enabled.
   Codex checkout branch/commit matches appear automatically through your existing
   `gh` login. `:pr URL` chooses an explicit session link instead.
+  Select a PR row in Details and press Enter to view its changes in your browser.
+  `:pr open` opens the session's only PR; with several, select a row first.
 - **Reviewed:** for sessions with a supported terminal connection, `:reviewed`
   clears the review marker after you read completed output. It leaves unanswered
   questions and errors alone.

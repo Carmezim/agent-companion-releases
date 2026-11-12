@@ -173,6 +173,8 @@ interval; `r` requests fresh checks, including after authenticating `gh` again.
 Confirmed merged PRs stop automatic status checks and do not become stale just
 from age. `r` still rechecks them; automatic checks resume if a successful check
 reports a different status.
+Select a PR row in Details and press Enter to open Files changed in your browser.
+`:pr open` also works when the session has one PR; with several, choose a row.
 Discovery uses the checkout recorded by the harness. If that directory is not a
 Git checkout, use `:pr URL` to associate a PR explicitly. Git, missing CLI,
 authentication, repository access and timeout failures have separate messages.
