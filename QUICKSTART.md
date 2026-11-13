@@ -17,11 +17,14 @@ For a new user who wants the essentials on one page.
   session, or a separate floating Ghostty window. In Rex, `F` docks only the
   panel; `F` again floats it. Docked and minimized panels stay in their tab.
   Use `agents --panel` in your current terminal pane. In Rex, either view
-  provides read-only Codex and Pi activity; session opening, answers and run timing
-  remain unavailable there.
+  provides read-only Codex and Pi activity. Answers and run timing remain
+  unavailable for these observations.
 - **Move and open:** `j` / `k` or arrows select; Enter opens sessions with a
-  supported terminal connection. Switch to read-only sessions in their original
-  terminal yourself.
+  supported terminal connection. A session-card click also opens it. In Rex,
+  Codex terminals can open directly; switch to Pi in its original pane. Opening
+  another Rex session requires one connected local Rex app with
+  **Settings → Rex Server → Remote Control** enabled.
+  If opening is unavailable, switch to the original terminal yourself.
 - **Find:** `/` searches. Enter keeps the search; Esc clears it.
 - **Read details:** Tab or Shift+Tab switches Sessions and Details. Use `h/j/k/l` or arrows to move the visible cursor; `{` / `}` jumps sections. Enter expands
   a group, answers a question, or inspects a request or child. Current work and
@@ -109,7 +112,7 @@ Green means working, red means an error or interruption, purple means review is
 requested. An **unknown outcome** means a request was seen but its answer or
 cancellation was not; it may already be resolved. With a supported terminal
 connection, `:open` returns to the agent for requests the panel cannot answer.
-For read-only sessions, switch to the original terminal yourself.
+If opening is unavailable, switch to the original terminal yourself.
 
 An open panel checks native Codex history for matching answers when a callback
 was missed. This clears supported captured questions automatically. Older records

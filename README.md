@@ -8,8 +8,10 @@ is compiled Zig code; it makes no model requests and never switches providers.
 ## Install
 
 Requires Apple Silicon and macOS 13 or later. Ghostty floating windows and
-session navigation require Ghostty with AppleScript support. Rex floating mode
-requires a local Rex API 12 server and its `rex` CLI on PATH.
+navigation require Ghostty with AppleScript support. Rex floating mode and
+navigation require a local Rex API 12 server and its `rex` CLI on PATH.
+Opening another Rex session also requires one connected local Rex app with
+**Settings → Rex Server → Remote Control** enabled.
 Install Codex or Claude separately using their own account and setup instructions.
 
 Download and run the installer:
@@ -40,8 +42,10 @@ export PATH="$HOME/.local/bin:$PATH"
 | `agents -v` / `agents --version` | Show the installed version and build information. |
 
 In Rex, use either view for read-only Codex activity after enabling the
-native hooks below, or Pi activity after enabling its adapter. Opening sessions,
-answering questions and last-run timing remain unavailable there.
+native hooks below, or Pi activity after enabling its adapter. Enter or a
+session-card click opens a verified local Codex terminal. Pi entries must be
+opened in their original pane. Answers and last-run timing remain unavailable
+for these observations.
 The floating panel follows tabs within its Rex session without changing their
 focus. Click it to use its keys. `F` docks only the panel beside a tiled pane;
 `F` again floats it. Docked and minimized panels stay in their tab. Closing the
@@ -116,7 +120,7 @@ terminal-workspace setup-hooks --claude-questions native --apply
 Ordinary setup and updates preserve your choice. Permission and plan approvals
 remain in the agent session. Pi panel answers are not supported. For sessions
 with a supported terminal connection, `:open` returns to the agent for other
-requests. For read-only sessions, switch to the original terminal yourself.
+requests. If opening is unavailable, switch to the original terminal yourself.
 Acknowledging panel attention does not answer a question or grant permission.
 
 ## Pi trial
@@ -128,7 +132,10 @@ or `:new pi` in workspace mode. Questions and child agents are not tracked yet.
 
 Native names take precedence for Codex, Claude and Pi. Unnamed sessions show an
 abbreviated native session ID in the list and the full ID in Details. Pi's `/name`
-command assigns a name. Native IDs that are not available yet keep an unnamed label.
+command assigns a name. In Rex, a Codex terminal without a verified conversation
+can use its program-written terminal title as a display label. Details marks its
+unverified identity; this label does not enable answers or PR association.
+Other sessions without a native ID keep an unnamed label.
 
 Supported Claude versions also supply native background sessions with verified
 running processes. These appear with a **Background** label. Old saved jobs stay
@@ -146,7 +153,7 @@ handoff says **Backgrounded**, instead of animating an old working observation.
 ## Controls
 
 Use `j/k` or arrows to select; Enter opens sessions with a supported terminal
-connection. For read-only sessions, switch to the original terminal yourself.
+connection. If opening is unavailable, switch to the original terminal yourself.
 Tab or Shift+Tab switches
 Sessions and Details; `h/j/k/l` or arrows move the Details cursor. `/` searches
 sessions and `?` shows contextual help. `v` selects characters, `V` selects lines,
