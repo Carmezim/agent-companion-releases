@@ -26,6 +26,8 @@ For a new user who wants the essentials on one page.
   **Settings → Rex Server → Remote Control** enabled.
   If opening is unavailable, switch to the original terminal yourself.
 - **Find:** `/` searches. Enter keeps the search; Esc clears it.
+- **Filter:** click **All**, **Needs you**, **Working** or **To review**, or press
+  `1`–`4` in Sessions. `:show-all` clears both search and status filters.
 - **Read details:** Tab or Shift+Tab switches Sessions and Details. Use `h/j/k/l` or arrows to move the visible cursor; `{` / `}` jumps sections. Enter expands
   a group, answers a question, or inspects a request or child. Current work and
   pending input start open; earlier requests, saved context and session metadata
@@ -109,11 +111,17 @@ his instructions or task files. Saved task context and explicit progress reports
 are optional extras; beta testers can use the panel without them.
 
 Green means working, red means an error or interruption, purple means review is
-requested. An **unknown outcome** means a request was seen but its answer or
+requested. An **unconfirmed request** means a request was seen but its answer or
 cancellation was not; it may already be resolved. With a supported terminal
 connection, `:open` returns to the agent for requests the panel cannot answer.
 If opening is unavailable, switch to the original terminal yourself.
 
 An open panel checks native Codex history for matching answers when a callback
 was missed. This clears supported captured questions automatically. Older records
-without the original question identity can still show an unknown outcome.
+without the original question identity can still show an unconfirmed request.
+
+Claude's **Shell task open** means an unfinished shell task remains while the
+model may be idle. Press `r` to refresh its job list immediately. Some Codex
+terminals using a shared backend still lack a verified conversation binding;
+the panel retains their existing observations instead of assigning another
+thread's status.

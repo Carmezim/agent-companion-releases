@@ -152,6 +152,12 @@ handoff says **Backgrounded**, instead of animating an old working observation.
 
 ## Controls
 
+The header counts **All**, **Needs you**, **Working** and **To review**. Click a
+count or press `1`–`4` in Sessions to filter. `:show-all` clears search and status
+filters. A separate count identifies requests whose resolution is unconfirmed.
+Session rows keep provider, path and activity age together; full messages and
+run duration are in Details. Pending input appears before long work messages.
+
 Use `j/k` or arrows to select; Enter opens sessions with a supported terminal
 connection. If opening is unavailable, switch to the original terminal yourself.
 Tab or Shift+Tab switches
@@ -170,6 +176,13 @@ Plain `q` never closes the panel.
 
 The session list fills available space when you resize a pane or sessions close,
 while preserving your selection. Discovery warnings clear when updates recover.
+
+Claude's **Shell task open** means an unfinished shell task remains while the
+model may be idle. The panel reuses successful Claude job lists for five seconds;
+`r` requests a fresh read. Current process and session-manifest checks continue.
+Codex native backend status is used only for independently verified sessions.
+Some shared-server terminals still lack that binding and retain their existing
+observations. The reader starts no daemon or model turn and sends no answers.
 
 Optional PR tracking starts off. Type `:prs on` to enable it with your existing
 GitHub CLI login, or `:prs off` to stop it. Codex checkout branch/commit matches
