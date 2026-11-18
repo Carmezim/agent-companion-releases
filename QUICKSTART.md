@@ -121,7 +121,7 @@ was missed. This clears supported captured questions automatically. Older record
 without the original question identity can still show an unconfirmed request.
 
 Claude's **Shell task open** means an unfinished shell task remains while the
-model may be idle. Press `r` to refresh its job list immediately. Some Codex
-terminals using a shared backend still lack a verified conversation binding;
-the panel retains their existing observations instead of assigning another
-thread's status.
+model may be idle. A finished turn awaiting review stays under **To review**
+while the shell task remains open. Press `r` to refresh its job list immediately.
+The passive Codex backend status reader is disabled until exact terminal-to-thread
+binding is available. Existing Codex observations continue.

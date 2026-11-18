@@ -180,9 +180,10 @@ while preserving your selection. Discovery warnings clear when updates recover.
 Claude's **Shell task open** means an unfinished shell task remains while the
 model may be idle. The panel reuses successful Claude job lists for five seconds;
 `r` requests a fresh read. Current process and session-manifest checks continue.
-Codex native backend status is used only for independently verified sessions.
-Some shared-server terminals still lack that binding and retain their existing
-observations. The reader starts no daemon or model turn and sends no answers.
+A finished turn awaiting review stays under **To review** even while its shell
+task remains open. Pending input still takes priority.
+The passive Codex backend status reader is disabled until exact terminal-to-thread
+binding is available. Existing Codex hooks, journals and terminal observations continue.
 
 Optional PR tracking starts off. Type `:prs on` to enable it with your existing
 GitHub CLI login, or `:prs off` to stop it. Codex checkout branch/commit matches
