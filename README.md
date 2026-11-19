@@ -238,8 +238,12 @@ have been answered in its harness.
 The collector shares collection work across readers. It checks for registry
 changes and periodically discovers native activity. Reads do not initiate
 scans. Responses omit names, paths, messages and question text; session references
-are opaque and do not grant control. The panel still uses its existing collection
-path in this release.
+are opaque and do not grant control.
+
+Open panels also reuse the monitor's observations when their registry and native
+configuration match. Each panel keeps its own navigation checks, question actions
+and PR refresh schedule. If the monitor stops or its view is unusable, the panel
+collects directly. Pressing `r` still requests a fresh local observation.
 
 Ctrl+C in the collector terminal stops it without stopping agents or panels.
 Readers never start a service automatically. Use the same registry scope
