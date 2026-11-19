@@ -211,6 +211,51 @@ Esc returns. In the child list, `:d` hides a child and `:attach` restores one.
 `:clear-history` hides ended child turns; later turns appear again. Provider
 logs and running processes stay intact.
 
+## Read session state from another agent
+
+The optional collector is a shared local session monitor. Start it in a terminal:
+
+```sh
+agents serve
+```
+
+Leave it running while readers use these commands from another terminal:
+
+```sh
+agents sessions --json
+agents wait attention --timeout 1m --json
+agents socket
+```
+
+`sessions` returns the most recently collected observation. `wait attention`
+waits for a recorded question, permission request, native waiting state or
+explicitly reported blocker. Ordinary output awaiting review does not match.
+Exit codes are 0 for an observation or match, 2 for a wait timeout, 3 when the
+collector or its data is unavailable, and 4 for invalid arguments or protocol.
+Check coverage and original observation times: a recorded request may already
+have been answered in its harness.
+
+The collector shares collection work across readers. It checks for registry
+changes and periodically discovers native activity. Reads do not initiate
+scans. Responses omit names, paths, messages and question text; session references
+are opaque and do not grant control. The panel still uses its existing collection
+path in this release.
+
+Ctrl+C in the collector terminal stops it without stopping agents or panels.
+Readers never start a service automatically. Use the same registry scope
+(`TERMINAL_WORKSPACE_STATE`, when overridden) for the collector and its readers.
+
+Sandboxed readers need access to the exact path printed by `agents socket`.
+For a single Codex sandbox invocation, substitute that path and an existing
+permission profile:
+
+```sh
+codex sandbox -P PROFILE --allow-unix-socket /exact/read.sock -- agents sessions --json
+```
+
+This release does not change harness permissions. Keep existing settings and
+grant only that endpoint; do not enable unrestricted socket access.
+
 ## Files and updates
 
 - Launchers: `~/.local/bin/agents` and `~/.local/bin/terminal-workspace`.
