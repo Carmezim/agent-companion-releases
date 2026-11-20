@@ -10,7 +10,7 @@ is compiled Zig code; it makes no model requests and never switches providers.
 Requires Apple Silicon and macOS 13 or later. Ghostty floating windows and
 navigation require Ghostty with AppleScript support. Rex floating mode and
 navigation require a local Rex API 12 server and its `rex` CLI on PATH.
-Opening another Rex session also requires one connected local Rex app with
+Opening a Rex terminal also requires one connected local Rex app with
 **Settings → Rex Server → Remote Control** enabled.
 Install Codex or Claude separately using their own account and setup instructions.
 
@@ -87,16 +87,19 @@ Setup enables the Claude session observer by default so ordinary `claude`
 launches register. It preserves your status line's output or runs silently when
 you have no custom renderer, refreshing every five seconds to recover a missed
 startup observation. Existing renderers keep their refresh settings.
-After updating an older installation, rerun
-`terminal-workspace setup-hooks --apply` once.
+Upgrades from 0.4.0 retain working hook settings. Rerun
+`terminal-workspace setup-hooks --apply` only to enable missing tracking or
+change its options.
 
 Start or resume native clients after setup so they load the hooks. Allow macOS
 Automation access to Ghostty when prompted; later opens reuse that grant.
 
-For supported root Codex async questions connected to a verified shared server,
-Enter on a suggested answer, or its number (keys 1-9), opens the full answer with
-it selected, and Enter there sends it; Enter on **Answer** opens the choices to
-pick from. Embedded Codex sessions require answering in Codex.
+For supported root Codex async questions in a registered session connected to a
+verified shared server, Enter on **Answer** opens the choices. Each choice
+advances through the batch; **Submit answers** sends them after a complete review.
+A single question shows the chosen or written answer before Enter sends it.
+Unregistered sessions, embedded Codex sessions and questions whose originating
+turn ended require answering in Codex.
 
 Optional Claude panel answers use the native question hook. Enable them explicitly:
 
@@ -174,6 +177,10 @@ window. `:q` closes the panel and leaves agents running.
 Esc, then `:`, opens a visible command line. Enter runs it; Esc cancels it.
 Plain `q` never closes the panel.
 
+Click a footer message or type `:messages` to read recent panel errors. Select
+text and press `y`, or press `y` without a selection to copy the displayed history.
+Esc clears a selection, then returns to the panel.
+
 The session list fills available space when you resize a pane or sessions close,
 while preserving your selection. Discovery warnings clear when updates recover.
 
@@ -213,13 +220,22 @@ logs and running processes stay intact.
 
 ## Read session state from another agent
 
-The optional collector is a shared local session monitor. Start it in a terminal:
+The shared session monitor is a separate Zig process that checks sessions once
+for compatible panels and agent queries. A panel starts or reuses it
+automatically. After one minute without readers, an automatic monitor exits.
+For tools that need it after panels close, keep it running with:
 
 ```sh
-agents serve
+agents serve --background
+agents serve --status
 ```
 
-Leave it running while readers use these commands from another terminal:
+You can close that terminal. It does not start at login or restart after a reboot.
+Repeating the start command keeps the running monitor. When its configuration
+matches, an automatic monitor becomes persistent without restarting.
+`agents sessions --help`
+explains the monitoring workflow, JSON fields, exit codes and repeated signals,
+with a diagram of the data flow. Readers use:
 
 ```sh
 agents sessions --json
@@ -244,9 +260,18 @@ Open panels also reuse the monitor's observations when their registry and native
 configuration match. Each panel keeps its own navigation checks, question actions
 and PR refresh schedule. If the monitor stops or its view is unusable, the panel
 collects directly. Pressing `r` still requests a fresh local observation.
+The header shows **SHARED MONITOR** or **LOCAL CHECKS**. A configuration mismatch
+shows **LOCAL · SETTINGS DIFFER**, with an explanation in `:messages`. Matching
+includes the full `PATH`; start a persistent monitor from the same shell as
+the panel. An agent harness may use a different command environment.
 
-Ctrl+C in the collector terminal stops it without stopping agents or panels.
-Readers never start a service automatically. Use the same registry scope
+`agents serve --stop` stops a background monitor without stopping agents or panels.
+Open panels respect the stop and collect directly; reopening a panel tries
+startup again. Failed startup also keeps the direct path. Workspace views use
+their own checks and do not start an unused shared monitor.
+Plain `agents serve` still runs in the foreground and stops with Ctrl+C.
+Restart the monitor and reopen panels after updating to use the installed code.
+Agent read commands never start a service automatically. Use the same registry scope
 (`TERMINAL_WORKSPACE_STATE`, when overridden) for the collector and its readers.
 
 Sandboxed readers need access to the exact path printed by `agents socket`.

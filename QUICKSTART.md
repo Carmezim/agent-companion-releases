@@ -1,127 +1,197 @@
-# Agent companion beta
+# Agent Companion beta quick start
 
-For a new user who wants the essentials on one page.
+Agent Companion shows local Codex, Claude and Pi sessions in one terminal panel.
+It reads native harness data and makes no model requests. You do not need
+agent-workflow, custom agent instructions, Python or a compiler.
 
-- **Install:** run the terminal installer below. Apple Silicon Mac, macOS 13+.
-- **Enable tracking:** run `terminal-workspace setup-hooks --apply`, then restart
-  and resume Codex/Claude sessions when convenient so they load the hooks.
-  Ordinary `claude` launches register through the installed status line observer.
-  Existing status line output is preserved; without a custom renderer, the
-  observer runs silently and retries idle observations every five seconds.
-  After updating from an older version, rerun setup once.
-- **Pi trial:** with Pi 1.2.0, 1.3.0 or 1.5.0 installed,
-  run `terminal-workspace setup-pi --apply`, then `/reload` in Pi. Names, model,
-  activity and errors are tracked; questions and child agents are not included
-  yet. Workspace can start it with `:new pi`.
-- **Open:** `agents --floating` opens a Rex overlay that follows tabs in its
-  session, or a separate floating Ghostty window. In Rex, `F` docks only the
-  panel; `F` again floats it. Docked and minimized panels stay in their tab.
-  Use `agents --panel` in your current terminal pane. In Rex, either view
-  provides read-only Codex and Pi activity. Answers and run timing remain
-  unavailable for these observations.
-- **Move and open:** `j` / `k` or arrows select; Enter opens sessions with a
-  supported terminal connection. A session-card click also opens it. In Rex,
-  Codex terminals can open directly; switch to Pi in its original pane. Opening
-  another Rex session requires one connected local Rex app with
-  **Settings → Rex Server → Remote Control** enabled.
-  If opening is unavailable, switch to the original terminal yourself.
-- **Find:** `/` searches. Enter keeps the search; Esc clears it.
-- **Filter:** click **All**, **Needs you**, **Working** or **To review**, or press
-  `1`–`4` in Sessions. `:show-all` clears both search and status filters.
-- **Read details:** Tab or Shift+Tab switches Sessions and Details. Use `h/j/k/l` or arrows to move the visible cursor; `{` / `}` jumps sections. Enter expands
-  a group, answers a question, or inspects a request or child. Current work and
-  pending input start open; earlier requests, saved context and session metadata
-  start collapsed.
-- **Questions:** for supported Codex async requests with a verified
-  shared-server connection, Enter on a suggested answer, or its number (keys 1-9),
-  opens the full answer with it selected, and Enter there sends it.
-  Enter on the question opens its answer field: arrows or a number pick, Enter
-  answers, and clicks only select. Embedded Codex sessions must be
-  answered in Codex; the panel shows the reason if preparation fails. **Write an answer**
-  opens text input; Enter sends, Esc goes back, Ctrl+G opens field help. `:requests`
-  lists requests. With a supported terminal connection, `:open` returns to the
-  agent for requests the panel cannot answer; `:answered` or `:cancelled` clears
-  a record already handled there without sending input. For read-only
-  sessions, answer in the original terminal; these record controls are disabled.
-- **Optional Claude answers:** run `terminal-workspace setup-hooks --claude-questions panel --apply`,
-  then start or resume Claude with a terminal panel open. **Answer question batch**
-  collects choices or written answers before you send. Space toggles checkboxes;
-  comma-separated numbers select several choices. **Open in Claude**, Ctrl+O or
-  `:open` returns unsent questions to Claude. Esc closes only the draft. Existing dialogs, permission approvals and Pi questions use their
-  original session. Restore Claude's native answering with
-  `terminal-workspace setup-hooks --claude-questions native --apply`.
-- **PR tracking:** `:prs on` enables checks; `:prs off` stops them.
-  `:prs refresh 15s` saves the interval without enabling tracking. `r` refreshes
-  observations and requests fresh PR checks when enabled.
-  Codex checkout branch/commit matches appear automatically through your existing
-  `gh` login. `:pr URL` chooses an explicit session link instead.
-  Select a PR row in Details and press Enter to view its changes in your browser.
-  `:pr open` opens the session's only PR; with several, select a row first.
-- **Reviewed:** for sessions with a supported terminal connection, `:reviewed`
-  clears the review marker after you read completed output. It leaves unanswered
-  questions and errors alone.
-- **Copy:** `v` selects characters; `V` selects lines. Extend with arrows or Vim
-  keys, then `y` copies. Drag within Details and release to copy immediately.
-  `:copy` copies all expanded Details, including offscreen text. The highlight
-  stays until Esc, an ordinary click, or a pane/session change. Details says
-  **PAUSED** during selection; the session list and background tracking continue.
-- **Remove / restore:** `:d` (or `:remove`) removes a session from the list in any
-  mode without stopping it.
-  `:attach` (or `:a`) lists other running sessions; Enter adds one.
-- **Quit:** press Esc, type `:q`, then Enter. Your agents keep running.
-- **Help:** `?` lists controls; `agents -h` shows command-line options.
-- **Update:** `agents --update`. Reopen the panel to load the new version.
-  Run `/reload` inside each open Pi session to load its refreshed adapter.
-- **Version:** the panel shows its running version at the bottom right.
-  `agents -v` or `agents --version` shows the installed build.
-- **Local development build:** `agents --update --local` installs the latest
-  package prepared on your Mac, without a version or checkout path.
-- **Report a bug:** describe what you did and what happened; include the output of
-  `agents --diagnostics > agent-companion-report.json`. It contains recent timings
-  and error codes, plus workspace process IDs and row counts. It excludes session
-  names, directories, prompts and answers.
+## Upgrade from 0.4.0 or later
+
+Run in your normal terminal:
+
+```sh
+agents --update
+agents --version
+```
+
+Close and reopen the panel to load the new version. Your agents keep running.
+Existing tracking settings and preferences stay in place.
+
+- Pi users: run `/reload` inside **each open Pi session** after updating.
+- If tracking already works, keep your hook setup. If you never enabled it,
+  or a harness is missing, follow the matching setup below.
+- If you run a background monitor, restart it with `agents serve --stop`,
+  then `agents serve --background`. A monitor started with plain
+  `agents serve` still stops with Ctrl+C in its own terminal.
+
+The bottom-right panel version identifies the code it is running.
+`agents --version` identifies the installed code; an already-open panel can
+still be running the previous version.
+
+## First installation
+
+Requires an Apple Silicon Mac with macOS 13 or later. Install your harnesses
+separately. Download and run the public installer:
 
 ```sh
 curl -fsSL https://github.com/Carmezim/agent-companion-releases/releases/latest/download/install.sh -o /tmp/agent-companion-install.sh
 bash /tmp/agent-companion-install.sh
 ```
 
-If `agents` is not found, add `~/.local/bin` to your shell's PATH.
+If your shell cannot find `agents`, add `~/.local/bin` to your PATH.
 
-Workspace mode is optional: install tmux 3.6+ (`brew install tmux`), then run
-`agents --workspace`. Use `:new codex` or `:new claude` to start sessions inside
-that workspace. Cmd+Option+Left/Right moves between the list and agent terminal.
-Here `:detach` disconnects the viewer, Enter reconnects, and `:close` followed by
-`:close!` closes the selected agent terminal. Panel and floating modes do not
-require tmux.
+## Enable tracking for your harnesses
 
-### Where the displayed information comes from
+For Codex and Claude:
 
-The companion uses local processes and the harnesses' existing events. It makes
-no model calls and needs no special agent reporting instructions. It can show
-native final assistant text, Claude task updates and Pi completed responses.
-Codex plan updates are supported when that hook is emitted; delivery remains
-unverified for the installed localhost test client. Live commentary is not
-captured yet, so a working agent can have an older description. Each description
-keeps its source and original age; text from an earlier turn is labelled.
+```sh
+terminal-workspace setup-hooks --apply
+```
 
-`agent-workflow` is Adriano's separate personal task-record helper. It is not a
-Codex feature or a requirement for beta testers, and the installer does not copy
-his instructions or task files. Saved task context and explicit progress reports
-are optional extras; beta testers can use the panel without them.
+Restart and resume those sessions when convenient so they load the hooks.
+Ordinary launches are supported; you do not need to start agents through
+Companion. Claude's observer preserves an existing status line and stays silent
+when there is no custom renderer.
 
-Green means working, red means an error or interruption, purple means review is
-requested. An **unconfirmed request** means a request was seen but its answer or
-cancellation was not; it may already be resolved. With a supported terminal
-connection, `:open` returns to the agent for requests the panel cannot answer.
-If opening is unavailable, switch to the original terminal yourself.
+For Pi:
 
-An open panel checks native Codex history for matching answers when a callback
-was missed. This clears supported captured questions automatically. Older records
-without the original question identity can still show an unconfirmed request.
+```sh
+terminal-workspace setup-pi --apply
+```
 
-Claude's **Shell task open** means an unfinished shell task remains while the
-model may be idle. A finished turn awaiting review stays under **To review**
-while the shell task remains open. Press `r` to refresh its job list immediately.
-The passive Codex backend status reader is disabled until exact terminal-to-thread
-binding is available. Existing Codex observations continue.
+Run `/reload` inside each open Pi session, or restart Pi. Pi supplies names,
+model, reasoning, activity and failures. Questions and child agents are not
+tracked yet. Setup **without `--apply` only previews changes**.
+
+Native names take precedence. Unnamed sessions use their native ID when
+available; Pi's `/name` command gives a session a name.
+
+## Open the panel
+
+```sh
+agents --panel
+```
+
+For a floating view:
+
+```sh
+agents --floating
+```
+
+In Rex, the overlay follows tabs within its session. Click it to use its keys.
+`F` docks the panel; pressing `F` again floats it. Docked or minimized panels
+stay in their tab. Ghostty opens a separate floating window.
+
+For Rex navigation, enable **Settings → Rex Server → Remote Control** in the
+local Rex app. This lets Companion ask the app to display the selected terminal.
+The panel reports refused requests and destinations it cannot verify.
+
+- Arrows or `j/k` select a session; Enter opens a supported terminal.
+- Tab switches Sessions and Details. Enter expands the item under the cursor.
+- `1`–`4` filter All, Needs you, Working and To review. `:show-all` clears filters.
+- `/` searches; `r` refreshes; `?` opens help.
+- In Details, drag and release to copy, or use `v` / `V`, movement keys, then `y`.
+- Click the footer message or run `:messages` to read and copy recent errors.
+  Use `y` to copy the message history, or select a range first. Esc returns.
+- `:q` closes only the panel. Your agents keep running.
+
+Panel and floating modes need no tmux. The optional `agents --workspace` mode
+requires tmux 3.6+ and keeps a list beside agent terminals.
+
+## Shared session monitoring
+
+The **session monitor**, also called the collector, is a separate local Zig
+process. It checks sessions once and shares observations with compatible panels
+and agent queries. It does not run models or answer questions.
+
+Opening a panel starts or reuses it automatically. It exits after one minute
+without readers. No setup command is needed for this. Workspace mode keeps its
+own checks.
+
+To keep the monitor running for tools even after panels close:
+
+```sh
+agents serve --background
+agents serve --status
+```
+
+You can close that terminal. Repeating the start command keeps the existing
+monitor and makes an automatic monitor persistent when the configuration matches.
+It does not start at login or restart after a reboot.
+
+```sh
+agents serve --stop
+```
+
+Stopping it leaves agents running; panels resume their own checks. Plain
+`agents serve` remains available in the foreground, stopped with Ctrl+C.
+An open panel does not restart a stopped monitor. Reopening the panel tries
+startup again. If startup fails, the panel keeps checking sessions directly.
+The monitor and panels must use the same home, `PATH`, harness settings and
+registry. Start a persistent monitor from the same shell you use for the panel;
+an agent's command environment may have a different `PATH`.
+The panel header shows **SHARED MONITOR** or **LOCAL CHECKS**. If it shows
+**LOCAL · SETTINGS DIFFER**, `:messages` explains the mismatch. A running
+`agents serve --status` alone does not establish that a panel can share its data.
+If you override `TERMINAL_WORKSPACE_STATE`, use the same value for both.
+
+Agent-facing reads are optional too:
+
+```sh
+agents sessions --json
+agents wait attention --timeout 1m --json
+agents socket
+```
+
+These read observations; they do not send answers or control agents.
+`agents sessions --help` explains the agent workflow with a diagram, the JSON
+fields, exit codes, and how to avoid repeated alerts for already-seen requests.
+Sandboxed agents may need permission for the exact path printed by
+`agents socket`. Companion does not change harness sandbox permissions.
+You do not need that permission setup just to use the panel.
+
+## Optional: PR checks and Claude answers
+
+In the panel, `:prs on` enables PR checks through your existing GitHub CLI login.
+`:prs refresh 15s` sets the interval; `r` also refreshes PRs.
+`:pr URL` links one explicitly; `:prs off` disables checks.
+Merged PRs stop automatic rechecking.
+
+For future Claude questions to appear as answerable panel dialogs:
+
+```sh
+terminal-workspace setup-hooks --claude-questions panel --apply
+```
+
+Restart or resume Claude with a panel open. The panel collects choices or written
+answers one question at a time, then shows the full batch before submission.
+Existing dialogs and permission approvals stay in
+Claude. To restore native answering:
+
+```sh
+terminal-workspace setup-hooks --claude-questions native --apply
+```
+
+Codex panel answers need a registered session, a verified native connection and
+an active supported question. The panel explains when you must answer in Codex
+instead. Once the originating turn has ended, open Codex to send a follow-up.
+Pi questions use Pi. Dismissing attention never answers a question or grants permission.
+
+## If something is missing
+
+Press `r`, then `:show-all` to clear filters. Check the setup above and reload
+or resume the affected harness. A terminal title can label a row without proving
+which native conversation it controls; some rows cannot offer answers or PR association.
+
+Send a screenshot and these outputs with your terminal app/version, harness
+version, and what you expected to see:
+
+```sh
+agents --version
+agents --doctor
+agents serve --status
+agents --diagnostics > agent-companion-report.json
+```
+
+The report contains timings, error codes, process IDs and counts. It excludes
+session names, paths, prompts and answers. A stopped optional monitor does not
+prevent the panel from working.
